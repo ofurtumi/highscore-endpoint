@@ -1,24 +1,22 @@
 import express from "express";
-import session from "express-session";
-
 import dotenv from "dotenv";
 
 dotenv.config();
 const app = express();
 
-// Sér um að req.body innihaldi gögn úr formi
-app.use(express.urlencoded({ extended: true }));
+function cors(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  next();
+}
 
+app.use(cors);
 const port = process.env.PORT || 3000;
 
-app.use(
-  session({
-    secret: "asdfasdfasdf",
-    resave: false,
-    saveUninitialized: false,
-    maxAge: 20 * 1000, // 20 sek
-  })
-);
 const indexRouter = express.Router();
 
 let fetch_data = async (n) => {
