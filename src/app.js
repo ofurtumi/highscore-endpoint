@@ -1,12 +1,15 @@
 import express from "express";
 import session from "express-session";
 
+import dotenv from "dotenv";
+
+dotenv.config();
 const app = express();
 
 // Sér um að req.body innihaldi gögn úr formi
 app.use(express.urlencoded({ extended: true }));
 
-const port = 5000;
+const port = process.env.PORT || 3000;
 
 app.use(
   session({
