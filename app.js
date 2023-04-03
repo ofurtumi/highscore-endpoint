@@ -21,26 +21,25 @@ const port = process.env.PORT || 3000;
 const indexRouter = express.Router();
 
 let fetch_data = async (n) => {
-  let temp = await fetch(`http://64.225.108.43:5000/highscore/${n}`, {});
+  let temp = await fetch(`http://64.225.108.43:5000/highscore/${n}`);
   return await temp.text();
 };
 
 function parse_highscore(data) {
   return data
     .split("\n")
-    .map((x) => `<li>${x.replace("<br>", "").substring(3)}</li>`);
+    .map((x) => `${x.replace("<br>", "").substring(3).trim()}`);
 }
 
 async function get_highscore(req, res) {
-  let scoreboard = [];
-  for (let i = 0; i < 10; i++) {
-    let data = parse_highscore(await fetch_data(i));
-    scoreboard.push(data);
-  }
-  res.json(scoreboard);
+  const { game } = req.params;
+
+  let data = parse_highscore(await fetch_data(game));
+
+  res.json(data);
 }
 
-indexRouter.get("/", get_highscore);
+indexRouter.get("/:game", get_highscore);
 
 app.use("/", indexRouter);
 app.listen(port, () => {
